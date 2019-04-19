@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>GeoJSONLayer - 4.11</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.11/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.11/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/layers/GeoJSONLayer",
+        "esri/views/MapView",
+		 "esri/widgets/Legend"
+      ], function(Map, GeoJSONLayer, MapView,Legend) {
+        // If GeoJSON files are not on the same domain as your website, a CORS enabled server
+        // or a proxy is required.
+  const less35 = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#fffcd4",
+          style: "solid",
+          outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+          }
+        };
+        const less50 = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#b1cdc2",
+          style: "solid",
+          outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+          }
+        };
+       const more50 = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#38627a",
+          style: "solid",
+          outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+          }
+        };
+        const more75 = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#0d2644",
+          style: "solid",
+          outline: {
+            width: 0.2,
+            color: [255, 255, 255, 0.5]
+          }
+        };
+        const renderer = {
+          type: "class-breaks", // autocasts as new ClassBreaksRenderer()
+          field: "pop2010",
+          //normalizationField: "EDUCBASECY",
+          legendOptions: {
+            title: "人口"
+          },
+          defaultSymbol: {
+            type: "simple-fill", // autocasts as new SimpleFillSymbol()
+            color: "black",
+            style: "backward-diagonal",
+            outline: {
+              width: 0.5,
+              color: [50, 50, 50, 0.6]
+            }
+          },
+//defaultLabel: "no data",
+          classBreakInfos: [
+            {
+              minValue: 0,
+              maxValue: 5000000,
+              symbol: less35,
+              label: "5百万"
+            },
+            {
+              minValue: 5000000,
+              maxValue: 10000000,
+              symbol: less50,
+              label: "5百万-1千万"
+            },
+            {
+              minValue: 10000000,
+              maxValue: 50000000,
+              symbol: more50,
+              label: "1千万-5千万"
+            },
+            {
+              minValue: 50000000,
+              maxValue: 150000000,
+              symbol: more75,
+              label: "过亿"
+            }
+          ]
+        };
+		geoJSONLayer = new GeoJSONLayer({
+   url: "https://liguiye.github.io/WebGIS3/chinawgs84_simplify.json",
+   	  renderer: renderer,
+});
+
+
+        const map = new Map({
+          basemap: "gray",
+	
+          //layers: [geojsonLayer]
+        });
+map.add(geoJSONLayer); 
+        const view = new MapView({
+          container: "viewDiv",
+          center: [-168, 46],
+          zoom: 3,
+          map: map
+        });
+		    view.ui.add(
+          new Legend({
+            view: view
+          }),
+          "top-right"
+        );
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
